@@ -177,7 +177,7 @@ export default function GuidePage() {
           ["<b>Transduction</b>","Bacteriophage carries donor DNA → can change non-pathogenic to pathogenic"],
           ["<b>Transformation</b>","Naked DNA from dying cells taken up (rare); cell must be 'competent'"],
         ]}/>
-        <K><b>Plasmids:</b> Extrachromosomal circular DNA; replicate independently. Types: F (pili/conjugation), R (resistance + sex pili), Dissimilation (disinfectant resistance). <b>Transposons</b> ("jumping genes"): move within/between DNA; 4 domains: inverted repeats, transposase, repressor, resistance enzyme.</K>
+        <K><b>Plasmids:</b> Extrachromosomal circular DNA; replicate independently. Types: F (pili/conjugation), R (resistance + sex pili), Dissimilation (disinfectant resistance). <b>Transposons</b> (&ldquo;jumping genes&rdquo;): move within/between DNA; 4 domains: inverted repeats, transposase, repressor, resistance enzyme.</K>
         <h3 className="font-display text-navy font-bold mt-4 mb-2">Resistance Mechanisms</h3>
         <T headers={["Mechanism","Details","Example"]} rows={[
           ["<b>Enzymatic Inactivation</b>","Enzymes deactivate drug","β-lactamases hydrolyze β-lactam ring"],
