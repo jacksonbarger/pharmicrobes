@@ -104,6 +104,7 @@ For interactive pages, add `"use client";` as the first line.
 | `/tree` | `src/app/tree/page.js` | inline `TREE` | Click-through diagnostic decision tree |
 | `/mnemonics` | `src/app/mnemonics/page.js` | `src/data/mnemonics.js` | Memory aids with items + tip |
 | `/confusables` | `src/app/confusables/page.js` | `src/data/confusables.js` | Side-by-side comparison cards |
+| `/vocab` | `src/app/vocab/page.js` | `src/data/vocab.js` | Progressive vocabulary lists (Weldon + Virga), leveled with prereq cross-refs |
 
 **Global search:** `src/components/SearchBar.js` is mounted in the sidebar on every page (Cmd+K shortcut). It searches a flat index built from all data files at `src/data/searchIndex.js`. The guide is indexed via a parallel text extract at `src/data/guideContent.js` — the guide JSX itself is not scraped, so **any new entry you add to `/guide` must be mirrored into `guideContent.js`** or it won't appear in search. Other data files (flashcards, mnemonics, confusables, highyield, tree) are imported directly, so they auto-index.
 

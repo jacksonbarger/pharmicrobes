@@ -4,6 +4,7 @@ import { CONFUSABLES } from "./confusables";
 import { HIGHYIELD } from "./highyield";
 import { TREE } from "./tree";
 import { GUIDE_CONTENT } from "./guideContent";
+import { VOCAB } from "./vocab";
 
 // Walk the decision tree, emit one entry per leaf answer with the path as context.
 function flattenTree(node, path = []) {
@@ -79,6 +80,19 @@ export const SEARCH_INDEX = [
     body: g.text,
     href: "/guide",
   })),
+
+  // Vocab (both instructors, all levels)
+  ...["weldon", "virga"].flatMap((who) =>
+    VOCAB[who].levels.flatMap((level) =>
+      level.terms.map((t) => ({
+        kind: "vocab",
+        cat: who,
+        title: t.term,
+        body: `${VOCAB[who].instructor} · Level ${level.n} (${level.title}): ${t.def}`,
+        href: `/vocab#term-${who}-${t.id}`,
+      }))
+    )
+  ),
 ];
 
 // Label + color metadata for each kind (rendered in the SearchBar dropdown).
@@ -89,6 +103,7 @@ export const KIND_META = {
   "high-yield": { label: "High-Yield", color: "bg-navy" },
   tree:       { label: "ID Tree",    color: "bg-green-700" },
   guide:      { label: "Study Guide",color: "bg-gp"      },
+  vocab:      { label: "Vocab",      color: "bg-atyp"    },
 };
 
 // Simple ranking search — no external deps.
