@@ -1,5 +1,18 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
+
+// ─── Figure helper ───────────────────────────────────────────────────────
+const Fig = ({ src, alt, w, h, caption }) => (
+  <figure className="my-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
+    <div className="flex items-center justify-center">
+      <Image src={src} alt={alt} width={w} height={h} className="max-w-full h-auto object-contain rounded" />
+    </div>
+    {caption && (
+      <figcaption className="mt-2 text-[11px] text-gray-600 italic text-center leading-snug">{caption}</figcaption>
+    )}
+  </figure>
+);
 
 // ─── Shared layout helpers ──────────────────────────────────────────────
 const S = ({ color, title, icon, children }) => (
@@ -45,20 +58,6 @@ const K = ({ children }) => (
   <div className="bg-gold-light border-l-4 border-gold px-4 py-3 rounded-r-lg my-3 text-sm">
     {children}
   </div>
-);
-
-// Inline figure with caption — used to embed SAR / structural diagrams
-// extracted from the original lecture decks. Plain <img> because the site
-// is a static export.
-const Fig = ({ src, alt, caption, max = "max-h-72" }) => (
-  <figure className="my-4 bg-white border border-gray-200 rounded-lg p-3">
-    <img src={src} alt={alt} className={`w-full ${max} object-contain mx-auto`} loading="lazy" />
-    {caption && (
-      <figcaption className="mt-2 text-[11px] text-gray-600 leading-relaxed italic text-center">
-        {caption}
-      </figcaption>
-    )}
-  </figure>
 );
 
 // ─── Weldon — Medical Microbiology ─────────────────────────────────────
@@ -248,16 +247,31 @@ function VirgaGuide() {
           ["<b>1948</b>","Giuseppe Brotzu isolates <i>Cephalosporium acremonium</i> from a sewage outflow; cephalosporin C later characterized by Abraham and Newton at Florey's lab."],
           ["<b>1955</b>","Ernst Chain at Beecham Pharmaceuticals suggests semi-synthetic modification of a common penicillin nucleus → leads to isolation of 6-APA."],
         ]}/>
-        <K><b>Chemical instability of natural penicillins:</b> unstable to acid, base, and solution at room temperature over time. Fleming originally believed penicillin was an enzyme and could not isolate the active component — so he moved on to sulfonamides. The β-lactam ring&rsquo;s inherent reactivity is exactly what makes it both a drug and a chemistry challenge.</K>
+        <K><b>Chemical instability of natural penicillins:</b> unstable to acid, base, and solution at room temperature over time. Fleming originally believed penicillin was an enzyme and could not isolate the active component — so he moved on to sulfonamides. The β-lactam ring's inherent reactivity is exactly what makes it both a drug and a chemistry challenge.</K>
         <K><b>Penicillin G vs Penicillin V:</b> both natural. Pen G is highly acid-labile → poor oral bioavailability → IV/IM. Pen V uses phenoxyacetic acid as its side-chain building block instead of phenylacetic acid — the phenoxy oxygen withdraws electrons from the β-lactam carbonyl, conferring enough acid stability for oral dosing. Both remain narrow-spectrum and β-lactamase susceptible.</K>
       </S>
 
       <S color="bg-gp" title="Peptidoglycan Target Review" icon="🧱">
-        <K><b>The target:</b> the peptidoglycan layer of the bacterial cell wall provides strength and rigidity. In Gram-positive species it may be 25-40 layers thick (~20% of dry weight). In Gram-negatives it&rsquo;s ~10% of dry weight, with an outer lipid bilayer.</K>
+        <K><b>The target:</b> the peptidoglycan layer of the bacterial cell wall provides strength and rigidity. In Gram-positive species it may be 25-40 layers thick (~20% of dry weight). In Gram-negatives it's ~10% of dry weight, with an outer lipid bilayer.</K>
+        <div className="grid gap-3 md:grid-cols-2 my-4">
+          <Fig
+            src="/sar/gram-positive-envelope.jpeg"
+            alt="Gram-positive cell envelope cross-section"
+            w={640} h={420}
+            caption="Gram-positive envelope: 25–40 layers of exposed peptidoglycan with embedded teichoic/lipoteichoic acids. Antibiotic access is easy — the PG is the outermost barrier."
+          />
+          <Fig
+            src="/sar/gram-negative-envelope.jpeg"
+            alt="Gram-negative cell envelope cross-section"
+            w={640} h={420}
+            caption="Gram-negative envelope: outer membrane (LPS + porins) hides a thin PG layer in the periplasm. Porin permeability + periplasmic β-lactamases are the two big gatekeepers."
+          />
+        </div>
         <Fig
           src="/sar/peptidoglycan-crosslink.jpeg"
-          alt="Peptidoglycan structure: alternating NAM and NAG sugars cross-linked by stem peptides via a pentaglycyl bridge."
-          caption="Peptidoglycan repeating unit (Virga slides). NAM-NAG backbone with the L-Ala / D-Glu / L-Lys / D-Ala stem peptide. The pentaglycyl bridge connects the ε-amino of L-Lys on one strand to the carbonyl of D-Ala on the next — this is the bond PBPs forge and β-lactams block by mimicking D-Ala-D-Ala."
+          alt="Peptidoglycan NAG/NAM repeating unit with pentaglycine cross-link"
+          w={720} h={440}
+          caption="Alternating NAG–NAM strands; NAM carries the stem peptide (L-Ala–D-Glu–L-Lys–D-Ala-D-Ala). PBP transpeptidase recognizes the terminal D-Ala-D-Ala and forms the pentaglycine cross-link to the adjacent strand — the exact chemistry β-lactams hijack."
         />
         <h3 className="font-display text-navy font-bold mt-4 mb-2">Repeating Unit</h3>
         <T headers={["Component","Detail"]} rows={[
@@ -275,7 +289,7 @@ function VirgaGuide() {
       </S>
 
       <S color="bg-coral" title="How β-Lactams Kill Bacteria" icon="⚛️">
-        <K><b>The trick:</b> β-lactams mimic the D-Ala-D-Ala terminus of the peptidoglycan stem peptide. The PBP active-site serine attacks the β-lactam carbonyl thinking it&rsquo;s the normal substrate — but instead of cleaving and releasing, the β-lactam forms an irreversible covalent bond. The PBP is permanently inactivated, the cell wall can no longer be cross-linked, and the bacterium lyses during growth.</K>
+        <K><b>The trick:</b> β-lactams mimic the D-Ala-D-Ala terminus of the peptidoglycan stem peptide. The PBP active-site serine attacks the β-lactam carbonyl thinking it's the normal substrate — but instead of cleaving and releasing, the β-lactam forms an irreversible covalent bond. The PBP is permanently inactivated, the cell wall can no longer be cross-linked, and the bacterium lyses during growth.</K>
         <h3 className="font-display text-navy font-bold mt-4 mb-2">β-Lactam Ring Essentials</h3>
         <T headers={["Feature","Why it matters"]} rows={[
           ["<b>4-membered ring (N1-C2-C3-C4)</b>","Highly strained → reactive. The strain is what drives PBP acylation."],
@@ -285,7 +299,13 @@ function VirgaGuide() {
           ["<b>R-group on the amide</b>","Only SAR handle. Affects spectrum, stability, and bioavailability."],
           ["<b>Carboxylic acid</b>","Binds PBP active site as the carboxylate ion."],
         ]}/>
-        <K><b>Why irreversible?</b> After the PBP serine attacks and opens the β-lactam, the thiazolidinone ring (on penicillins) cannot leave — it blocks the entry of the pentaglycyl bridge&rsquo;s amino terminus that would normally complete the reaction. The enzyme is stuck with the acyl-enzyme intermediate forever. In contrast, the normal D-Ala-D-Ala substrate releases the terminal D-Ala after the serine attack, freeing the enzyme.</K>
+        <K><b>Why irreversible?</b> After the PBP serine attacks and opens the β-lactam, the thiazolidinone ring (on penicillins) cannot leave — it blocks the entry of the pentaglycyl bridge's amino terminus that would normally complete the reaction. The enzyme is stuck with the acyl-enzyme intermediate forever. In contrast, the normal D-Ala-D-Ala substrate releases the terminal D-Ala after the serine attack, freeing the enzyme.</K>
+        <Fig
+          src="/sar/pbp-ic50-mic.png"
+          alt="Penicillin IC50 vs PBP isoform correlation with MIC"
+          w={720} h={420}
+          caption="PBP binding drives efficacy. A β-lactam's IC50 against each PBP isoform predicts the clinical MIC for organisms that depend on that PBP — different side chains give very different selectivity profiles across PBP1–PBP4."
+        />
       </S>
 
       <S color="bg-teal" title="The Four β-Lactam Classes at a Glance" icon="💊">
@@ -296,6 +316,12 @@ function VirgaGuide() {
           ["<b>Monobactam</b>","Monocyclic β-lactam","No fused ring; N1 sulfonate activates the carbonyl","Gram− only. Safe in true penicillin allergy (no shared fused ring for IgE cross-reactivity)."],
         ]}/>
         <K><b>Key idea:</b> all four classes use the same mechanism (PBP acylation via D-Ala-D-Ala mimicry) but they differ in which PBPs they prefer, how well they penetrate the outer membrane (Gram−), and how resistant they are to β-lactamases. For drug-level detail, see the <b>Drug Reference</b> page.</K>
+        <Fig
+          src="/sar/cephalosporin-generations.png"
+          alt="Cephalosporin generations table with mnemonic endings"
+          w={760} h={500}
+          caption="Cephalosporin generations by suffix: 1st gen (cef-a-/cef-fa-), 2nd gen (cef-fur-/cef-met-), 3rd gen (cef-ime/-ixime), 4th gen (cef-pi-), 5th gen (-ta-rol-ine). Each generation broadens Gram− coverage (and usually trades away some Gram+) by retuning the C-7 acyl and C-3 leaving groups."
+        />
       </S>
 
       <S color="bg-coral" title="Resistance Mechanisms" icon="🛡️">
@@ -313,12 +339,7 @@ function VirgaGuide() {
           ["<b>C</b>","Serine (chromosomal)","AmpC (SPACE bugs: <i>Serratia, Pseudomonas, Proteus, Acinetobacter, Citrobacter, Enterobacter</i>)","Avibactam, relebactam"],
           ["<b>D</b>","Serine (OXA-type)","OXA-48","Avibactam (some), relebactam"],
         ]}/>
-        <K><b>β-lactamase inhibitors (BLIs):</b> poor antibiotics on their own but synergize with β-lactams. Classical BLIs (clavulanate, sulbactam, tazobactam) are suicide substrates — they irreversibly acylate the enzyme&rsquo;s serine. Newer diazabicyclooctanes (avibactam, relebactam) reversibly carbamoylate the serine, letting one molecule inhibit multiple enzymes. Vaborbactam is a boronic-acid transition-state mimic.</K>
-        <Fig
-          src="/sar/cefiderocol-sar.png"
-          alt="Cefiderocol structure annotated with the C-7 acylamino side chain, C-3 catechol/pyrrolidinium side chain, and charged groups."
-          caption="Cefiderocol (5th-gen cephalosporin) is the SAR answer to metallo-β-lactamases. The C-7 acylamino side chain (left) provides serine-β-lactamase stability; the C-3 catechol side chain (right) chelates Fe³⁺ and rides the bacterial siderophore uptake system through the outer membrane (Trojan horse); charged groups protect against the zinc-active-site metallo-β-lactamases that destroy other carbapenems."
-        />
+        <K><b>β-lactamase inhibitors (BLIs):</b> poor antibiotics on their own but synergize with β-lactams. Classical BLIs (clavulanate, sulbactam, tazobactam) are suicide substrates — they irreversibly acylate the enzyme's serine. Newer diazabicyclooctanes (avibactam, relebactam) reversibly carbamoylate the serine, letting one molecule inhibit multiple enzymes. Vaborbactam is a boronic-acid transition-state mimic.</K>
       </S>
 
       <S color="bg-navy" title="Pharmacokinetics & PD Principles" icon="📊">
@@ -376,9 +397,9 @@ function VirgaGuide() {
         <K><b>Cross-reference:</b> for full drug-level detail on every class below, see the <b>Drug Reference</b> page (💊). This section is a conceptual map so you can place each drug in its mechanism family.</K>
         <Fig
           src="/sar/antibiotic-targets.png"
-          alt="Antibiotic mechanism overview diagram: cell wall, protein synthesis, DNA, RNA, and folate/metabolism inhibitors mapped to a generic bacterium."
-          caption="Antibiotic targets, from the Virga deck. Five mechanism families: cell wall (β-lactams, glycopeptides, fosfomycin), 30S/50S protein synthesis, DNA (fluoroquinolones, nitroimidazoles), RNA polymerase (rifamycins, fidaxomicin), and folate (sulfonamides + DHFR inhibitors). Use this map to place every drug in the table below."
-          max="max-h-96"
+          alt="Antibiotic mechanism of action overview"
+          w={800} h={560}
+          caption="Five bacterial targets are exploited by antibiotics: cell wall, protein synthesis (30S/50S), DNA synthesis, RNA polymerase, and folate metabolism. Every drug in the table below maps to one of these — place it in its family first, then memorize the specifics."
         />
         <T headers={["Target","Classes","Why it matters"]} rows={[
           ["<b>Cell wall (non-β-lactam)</b>","Glycopeptides (vancomycin, telavancin), Fosfomycin","Vancomycin binds the D-Ala-D-Ala <i>substrate</i> (not PBP) — different target, no cross-resistance. VRE/VRSA = D-Ala-D-Lac mutation. Fosfomycin inhibits MurA, the first step of PG synthesis."],

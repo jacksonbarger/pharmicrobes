@@ -1,6 +1,77 @@
 "use client";
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { DRUG_CLASSES } from "@/data/drugs";
+
+// SAR principle figures lifted from Dr. Virga's β-lactams.pptx.
+// Placed at the top of the page so the chemistry is one glance away from every class card.
+const SAR_FIGURES = [
+  {
+    src: "/sar/cefiderocol-sar.png",
+    w: 640, h: 520,
+    title: "Side chains steer everything — Cefiderocol",
+    caption:
+      "C-7 acyl side chain → β-lactamase stability. C-3 side chain → metallo-β-lactamase evasion. Catechol → iron chelation → trojan-horse uptake through bacterial iron transporters. One molecule, three SAR handles tuned in parallel.",
+  },
+  {
+    src: "/sar/penicillin-degradation.png",
+    w: 640, h: 440,
+    title: "The β-lactam ring is the drug AND the liability",
+    caption:
+      "Natural penicillin chemistry is fragile: acid opens the ring to penillic acid (why Pen G is IV/IM only), base/β-lactamases open it to penicilloic acid, methanol attack yields methyl ester, and amidase cleaves the side chain to 6-APA — the scaffold used for every semi-synthetic penicillin.",
+  },
+  {
+    src: "/sar/pbp-classification.png",
+    w: 640, h: 480,
+    title: "Different PBPs, different essentiality",
+    caption:
+      "Organisms rely on different PBP isoforms for cross-linking. The spectrum of a β-lactam is ultimately determined by which PBPs its side chain can reach and acylate — MRSA's PBP2a is the textbook escape (acquired via mecA, low affinity for classical β-lactams).",
+  },
+];
+
+function SarHero() {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className="section-card mb-6 overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full bg-navy text-white px-5 py-3 font-display font-bold text-base flex items-center justify-between gap-2 hover:brightness-110 transition-all"
+      >
+        <span className="flex items-center gap-2">
+          <span>⚛️</span>
+          <span>SAR Principles at a Glance</span>
+        </span>
+        <span className="text-xs font-normal opacity-80">{open ? "collapse ▴" : "expand ▾"}</span>
+      </button>
+      {open && (
+        <div className="p-5 bg-white">
+          <p className="text-xs text-gray-500 mb-4 italic">
+            Three figures from Dr. Virga&rsquo;s β-lactam slides that capture most of the SAR story — how side chains, ring chemistry, and target biology decide what each drug can do.
+          </p>
+          <div className="grid gap-5 md:grid-cols-3">
+            {SAR_FIGURES.map((fig) => (
+              <figure key={fig.src} className="flex flex-col">
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-2 flex items-center justify-center">
+                  <Image
+                    src={fig.src}
+                    alt={fig.title}
+                    width={fig.w}
+                    height={fig.h}
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
+                <figcaption className="mt-2">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-teal mb-0.5">{fig.title}</div>
+                  <div className="text-xs text-gray-700 leading-relaxed">{fig.caption}</div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const FAMILY_COLORS = {
   // β-lactams
@@ -46,38 +117,6 @@ const GROUP_META = {
 };
 
 const classGroup = (cls) => cls.group || "β-lactam";
-
-// SAR figures pulled from Dr. Virga's β-lactams.pptx (only principle figures,
-// not every individual structure). Keys are class IDs from drugs.js.
-const CLASS_FIGURES = {
-  "natural-pen": {
-    src: "/sar/penicillin-degradation.png",
-    caption:
-      "Penicillin G is unstable in three directions: acid → penillic acid (no PO bioavailability), β-lactamase → penicilloic acid (resistance), amidase → 6-APA. Every later β-lactam SAR is a response to one of these failure modes.",
-  },
-  "ceph-5": {
-    src: "/sar/cefiderocol-sar.png",
-    caption:
-      "Cefiderocol annotated. The C-7 acylamino side chain (left) blocks β-lactamase hydrolysis; the C-3 catechol side chain (right) chelates Fe³⁺ so the drug rides the bacterial siderophore uptake system through the outer membrane (Trojan-horse). Charged groups on both sides protect against metallo-β-lactamases.",
-  },
-};
-
-function ClassFigure({ figure }) {
-  if (!figure) return null;
-  return (
-    <figure className="mt-3 bg-white border border-gray-200 rounded-lg p-3">
-      <img
-        src={figure.src}
-        alt={figure.caption}
-        className="w-full max-h-72 object-contain"
-        loading="lazy"
-      />
-      <figcaption className="mt-2 text-[11px] text-gray-600 leading-relaxed italic">
-        {figure.caption}
-      </figcaption>
-    </figure>
-  );
-}
 
 const ROUTE_OPTS = ["All", "PO", "IV/IM", "Oral+Parenteral"];
 const SPECTRUM_OPTS = ["All", "Narrow", "Broad", "Extended", "MRSA", "Pseudomonas"];
@@ -219,27 +258,8 @@ export default function DrugsPage() {
         Med-chem focused. Structure, pharmacophore, SAR, and why each modification matters — sourced from Dr. Virga&rsquo;s β-lactams and Antimicrobial Coverage materials.
       </p>
 
-      {/* Hero SAR figure: cephalosporin generation map */}
-      <details className="section-card mb-6 group" open>
-        <summary className="cursor-pointer list-none px-5 py-3 bg-atyp text-white font-display font-bold text-base flex items-center justify-between">
-          <span className="flex items-center gap-2">🧬 Cephalosporin Generation Map (SAR snapshot)</span>
-          <span className="text-xs opacity-80 group-open:rotate-180 transition">▾</span>
-        </summary>
-        <div className="p-5">
-          <img
-            src="/sar/cephalosporin-generations.png"
-            alt="Cephalosporin generations chart from Virga β-lactams lecture: 1st gen (cefa-/cephra-), 2nd gen, 3rd gen (-ime), 4th gen (cefepime), 5th gen (-rol)."
-            className="w-full max-h-[480px] object-contain bg-white rounded"
-            loading="lazy"
-          />
-          <p className="mt-3 text-xs text-gray-600 italic leading-relaxed">
-            Mnemonic from Virga slides: <b>fa-/phra-</b> = 1st gen (Gram⁺ skew), <b>-ime</b> stem = 3rd gen
-            (extended Gram⁻), <b>-pime</b> = 4th gen (zwitterion → fast outer-membrane porin entry, anti-pseudomonal),
-            <b> -rol</b> = 5th gen (MRSA-active or siderophore). Side-chain bulk and charge at C-7/C-3 are the
-            two SAR levers driving each generational jump.
-          </p>
-        </div>
-      </details>
+      {/* SAR principles hero — figures from the β-lactams pptx */}
+      <SarHero />
 
       {/* Filters */}
       <div className="section-card p-4 mb-6">
@@ -389,7 +409,6 @@ export default function DrugsPage() {
                     <span className="font-bold text-coral uppercase tracking-wider">Resistance:</span> {cls.resistance}
                   </div>
                 )}
-                <ClassFigure figure={CLASS_FIGURES[cls.id]} />
               </div>
 
               <div className="space-y-2">
