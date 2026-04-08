@@ -4,6 +4,7 @@ const tools = [
   { href:"/guide", icon:"📖", title:"Study Guide", desc:"Complete breakdown of both lectures — Chain of infection, cell walls, structures, growth, virulence, toxins, genetics, resistance", color:"bg-navy" },
   { href:"/highyield", icon:"⭐", title:"Ultra High-Yield", desc:"Must-memorize facts with expandable detail dropdowns — the 80/20 of both lectures", color:"bg-gradient-to-r from-amber-600 to-pink-600" },
   { href:"/vocab", icon:"📚", title:"Vocabulary (Progressive)", desc:"Two ordered term lists — Weldon micro + Virga antimicrobials — leveled so each builds on the last", color:"bg-gradient-to-r from-navy to-coral" },
+  { href:"/drugs", icon:"💊", title:"β-Lactam Drug Reference", desc:"Med-chem focused drug cards — structure, SAR, stability, spectrum, and clinical role for every β-lactam in Virga's materials", color:"bg-gradient-to-r from-atyp to-green-700" },
   { href:"/charts", icon:"🗂️", title:"Bug Classification Charts", desc:"Filled + blank Gram stain organism charts for self-testing", color:"bg-gp" },
   { href:"/flashcards", icon:"🃏", title:"Flashcard Quiz", desc:"34 organism cards — flip, self-grade, track progress, filter by Gram type", color:"bg-teal" },
   { href:"/tree", icon:"🌳", title:"Bug ID Decision Tree", desc:"Click-through diagnostic logic: Gram stain → morphology → tests → organism", color:"bg-green-700" },

@@ -9,6 +9,7 @@ const NAV = [
   { href: "/guide", label: "Study Guide", icon: "📖" },
   { href: "/highyield", label: "High-Yield", icon: "⭐" },
   { href: "/vocab", label: "Vocabulary", icon: "📚" },
+  { href: "/drugs", label: "Drug Reference", icon: "💊" },
   { href: "/charts", label: "Bug Charts", icon: "🗂️" },
   { href: "/flashcards", label: "Flashcards", icon: "🃏" },
   { href: "/tree", label: "Bug ID Tree", icon: "🌳" },

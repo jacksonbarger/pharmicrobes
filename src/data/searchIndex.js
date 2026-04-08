@@ -5,6 +5,7 @@ import { HIGHYIELD } from "./highyield";
 import { TREE } from "./tree";
 import { GUIDE_CONTENT } from "./guideContent";
 import { VOCAB } from "./vocab";
+import { DRUG_CLASSES } from "./drugs";
 
 // Walk the decision tree, emit one entry per leaf answer with the path as context.
 function flattenTree(node, path = []) {
@@ -93,6 +94,22 @@ export const SEARCH_INDEX = [
       }))
     )
   ),
+
+  // Drugs (Virga β-lactam reference) — one entry per drug + one per class header
+  ...DRUG_CLASSES.flatMap((cls) => [
+    {
+      kind: "drug-class",
+      title: `${cls.name} (${cls.family})`,
+      body: `Nucleus: ${cls.nucleus}. ${cls.sarPrinciple} Stability: ${cls.stability}`,
+      href: "/drugs",
+    },
+    ...cls.drugs.map((d) => ({
+      kind: "drug",
+      title: `${d.generic}${d.brand && d.brand !== "—" ? ` (${d.brand})` : ""}`,
+      body: `${cls.name} · ${d.route} · ${d.spectrum}. ${d.keyStructure || ""} ${d.sar || ""} Clinical: ${d.clinical || ""}`,
+      href: "/drugs",
+    })),
+  ]),
 ];
 
 // Label + color metadata for each kind (rendered in the SearchBar dropdown).
@@ -104,6 +121,8 @@ export const KIND_META = {
   tree:       { label: "ID Tree",    color: "bg-green-700" },
   guide:      { label: "Study Guide",color: "bg-gp"      },
   vocab:      { label: "Vocab",      color: "bg-atyp"    },
+  drug:       { label: "Drug",       color: "bg-coral"   },
+  "drug-class": { label: "Drug Class", color: "bg-green-700" },
 };
 
 // Simple ranking search — no external deps.
