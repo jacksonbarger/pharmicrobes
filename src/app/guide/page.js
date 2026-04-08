@@ -248,12 +248,12 @@ function VirgaGuide() {
           ["<b>1948</b>","Giuseppe Brotzu isolates <i>Cephalosporium acremonium</i> from a sewage outflow; cephalosporin C later characterized by Abraham and Newton at Florey's lab."],
           ["<b>1955</b>","Ernst Chain at Beecham Pharmaceuticals suggests semi-synthetic modification of a common penicillin nucleus → leads to isolation of 6-APA."],
         ]}/>
-        <K><b>Chemical instability of natural penicillins:</b> unstable to acid, base, and solution at room temperature over time. Fleming originally believed penicillin was an enzyme and could not isolate the active component — so he moved on to sulfonamides. The β-lactam ring's inherent reactivity is exactly what makes it both a drug and a chemistry challenge.</K>
+        <K><b>Chemical instability of natural penicillins:</b> unstable to acid, base, and solution at room temperature over time. Fleming originally believed penicillin was an enzyme and could not isolate the active component — so he moved on to sulfonamides. The β-lactam ring&rsquo;s inherent reactivity is exactly what makes it both a drug and a chemistry challenge.</K>
         <K><b>Penicillin G vs Penicillin V:</b> both natural. Pen G is highly acid-labile → poor oral bioavailability → IV/IM. Pen V uses phenoxyacetic acid as its side-chain building block instead of phenylacetic acid — the phenoxy oxygen withdraws electrons from the β-lactam carbonyl, conferring enough acid stability for oral dosing. Both remain narrow-spectrum and β-lactamase susceptible.</K>
       </S>
 
       <S color="bg-gp" title="Peptidoglycan Target Review" icon="🧱">
-        <K><b>The target:</b> the peptidoglycan layer of the bacterial cell wall provides strength and rigidity. In Gram-positive species it may be 25-40 layers thick (~20% of dry weight). In Gram-negatives it's ~10% of dry weight, with an outer lipid bilayer.</K>
+        <K><b>The target:</b> the peptidoglycan layer of the bacterial cell wall provides strength and rigidity. In Gram-positive species it may be 25-40 layers thick (~20% of dry weight). In Gram-negatives it&rsquo;s ~10% of dry weight, with an outer lipid bilayer.</K>
         <Fig
           src="/sar/peptidoglycan-crosslink.jpeg"
           alt="Peptidoglycan structure: alternating NAM and NAG sugars cross-linked by stem peptides via a pentaglycyl bridge."
@@ -275,7 +275,7 @@ function VirgaGuide() {
       </S>
 
       <S color="bg-coral" title="How β-Lactams Kill Bacteria" icon="⚛️">
-        <K><b>The trick:</b> β-lactams mimic the D-Ala-D-Ala terminus of the peptidoglycan stem peptide. The PBP active-site serine attacks the β-lactam carbonyl thinking it's the normal substrate — but instead of cleaving and releasing, the β-lactam forms an irreversible covalent bond. The PBP is permanently inactivated, the cell wall can no longer be cross-linked, and the bacterium lyses during growth.</K>
+        <K><b>The trick:</b> β-lactams mimic the D-Ala-D-Ala terminus of the peptidoglycan stem peptide. The PBP active-site serine attacks the β-lactam carbonyl thinking it&rsquo;s the normal substrate — but instead of cleaving and releasing, the β-lactam forms an irreversible covalent bond. The PBP is permanently inactivated, the cell wall can no longer be cross-linked, and the bacterium lyses during growth.</K>
         <h3 className="font-display text-navy font-bold mt-4 mb-2">β-Lactam Ring Essentials</h3>
         <T headers={["Feature","Why it matters"]} rows={[
           ["<b>4-membered ring (N1-C2-C3-C4)</b>","Highly strained → reactive. The strain is what drives PBP acylation."],
@@ -285,7 +285,7 @@ function VirgaGuide() {
           ["<b>R-group on the amide</b>","Only SAR handle. Affects spectrum, stability, and bioavailability."],
           ["<b>Carboxylic acid</b>","Binds PBP active site as the carboxylate ion."],
         ]}/>
-        <K><b>Why irreversible?</b> After the PBP serine attacks and opens the β-lactam, the thiazolidinone ring (on penicillins) cannot leave — it blocks the entry of the pentaglycyl bridge's amino terminus that would normally complete the reaction. The enzyme is stuck with the acyl-enzyme intermediate forever. In contrast, the normal D-Ala-D-Ala substrate releases the terminal D-Ala after the serine attack, freeing the enzyme.</K>
+        <K><b>Why irreversible?</b> After the PBP serine attacks and opens the β-lactam, the thiazolidinone ring (on penicillins) cannot leave — it blocks the entry of the pentaglycyl bridge&rsquo;s amino terminus that would normally complete the reaction. The enzyme is stuck with the acyl-enzyme intermediate forever. In contrast, the normal D-Ala-D-Ala substrate releases the terminal D-Ala after the serine attack, freeing the enzyme.</K>
       </S>
 
       <S color="bg-teal" title="The Four β-Lactam Classes at a Glance" icon="💊">
@@ -313,7 +313,7 @@ function VirgaGuide() {
           ["<b>C</b>","Serine (chromosomal)","AmpC (SPACE bugs: <i>Serratia, Pseudomonas, Proteus, Acinetobacter, Citrobacter, Enterobacter</i>)","Avibactam, relebactam"],
           ["<b>D</b>","Serine (OXA-type)","OXA-48","Avibactam (some), relebactam"],
         ]}/>
-        <K><b>β-lactamase inhibitors (BLIs):</b> poor antibiotics on their own but synergize with β-lactams. Classical BLIs (clavulanate, sulbactam, tazobactam) are suicide substrates — they irreversibly acylate the enzyme's serine. Newer diazabicyclooctanes (avibactam, relebactam) reversibly carbamoylate the serine, letting one molecule inhibit multiple enzymes. Vaborbactam is a boronic-acid transition-state mimic.</K>
+        <K><b>β-lactamase inhibitors (BLIs):</b> poor antibiotics on their own but synergize with β-lactams. Classical BLIs (clavulanate, sulbactam, tazobactam) are suicide substrates — they irreversibly acylate the enzyme&rsquo;s serine. Newer diazabicyclooctanes (avibactam, relebactam) reversibly carbamoylate the serine, letting one molecule inhibit multiple enzymes. Vaborbactam is a boronic-acid transition-state mimic.</K>
         <Fig
           src="/sar/cefiderocol-sar.png"
           alt="Cefiderocol structure annotated with the C-7 acylamino side chain, C-3 catechol/pyrrolidinium side chain, and charged groups."
