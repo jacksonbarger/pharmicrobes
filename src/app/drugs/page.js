@@ -3,12 +3,49 @@ import { useMemo, useState } from "react";
 import { DRUG_CLASSES } from "@/data/drugs";
 
 const FAMILY_COLORS = {
+  // β-lactams
   Penicillin:            { bg: "bg-navy",    text: "text-navy",    light: "bg-navy-light",  border: "border-navy"  },
   "β-lactamase Inhibitor": { bg: "bg-gold", text: "text-amber-800", light: "bg-gold-light", border: "border-gold" },
   Cephalosporin:         { bg: "bg-atyp",    text: "text-atyp",    light: "bg-atyp-light",  border: "border-atyp"  },
   Carbapenem:            { bg: "bg-green-700", text: "text-green-800", light: "bg-green-50", border: "border-green-700" },
   Monobactam:            { bg: "bg-gp",      text: "text-gp",      light: "bg-gp-light",    border: "border-gp"    },
+  // Cell wall (non-β-lactam) & membrane
+  Glycopeptide:          { bg: "bg-green-700", text: "text-green-800", light: "bg-green-50", border: "border-green-700" },
+  Lipopeptide:           { bg: "bg-green-700", text: "text-green-800", light: "bg-green-50", border: "border-green-700" },
+  Polymyxin:             { bg: "bg-green-700", text: "text-green-800", light: "bg-green-50", border: "border-green-700" },
+  "Phosphonic acid":     { bg: "bg-green-700", text: "text-green-800", light: "bg-green-50", border: "border-green-700" },
+  // Protein synthesis 30S
+  Aminoglycoside:        { bg: "bg-teal",    text: "text-teal",    light: "bg-teal-light",  border: "border-teal"  },
+  Tetracycline:          { bg: "bg-teal",    text: "text-teal",    light: "bg-teal-light",  border: "border-teal"  },
+  // Protein synthesis 50S
+  Macrolide:             { bg: "bg-coral",   text: "text-coral",   light: "bg-coral-light", border: "border-coral" },
+  Lincosamide:           { bg: "bg-coral",   text: "text-coral",   light: "bg-coral-light", border: "border-coral" },
+  Oxazolidinone:         { bg: "bg-coral",   text: "text-coral",   light: "bg-coral-light", border: "border-coral" },
+  Streptogramin:         { bg: "bg-coral",   text: "text-coral",   light: "bg-coral-light", border: "border-coral" },
+  // Nucleic acid
+  Fluoroquinolone:       { bg: "bg-gn",      text: "text-gn",      light: "bg-gn-light",    border: "border-gn"    },
+  Rifamycin:             { bg: "bg-gold",    text: "text-amber-800", light: "bg-gold-light", border: "border-gold" },
+  Nitroimidazole:        { bg: "bg-gn",      text: "text-gn",      light: "bg-gn-light",    border: "border-gn"    },
+  Nitrofuran:            { bg: "bg-gn",      text: "text-gn",      light: "bg-gn-light",    border: "border-gn"    },
+  Macrocyclic:           { bg: "bg-gold",    text: "text-amber-800", light: "bg-gold-light", border: "border-gold" },
+  // Folate
+  "Sulfonamide + DHFR Inhibitor": { bg: "bg-coral", text: "text-coral", light: "bg-coral-light", border: "border-coral" },
 };
+
+// Mechanism groups for the top-level filter. Classes without an explicit
+// `group` field default to "β-lactam" (the original 11 classes in drugs.js).
+const GROUP_META = {
+  "β-lactam":       { label: "β-Lactam",         emoji: "🧬" },
+  "cell-wall":      { label: "Cell Wall (non-β)", emoji: "🧱" },
+  "other-cell-wall":{ label: "Cell Wall (other)", emoji: "🧱" },
+  membrane:         { label: "Membrane",          emoji: "💥" },
+  "protein-30s":    { label: "Protein 30S",       emoji: "🔬" },
+  "protein-50s":    { label: "Protein 50S",       emoji: "🧪" },
+  "nucleic-acid":   { label: "Nucleic Acid",      emoji: "🧬" },
+  folate:           { label: "Folate",            emoji: "🌿" },
+};
+
+const classGroup = (cls) => cls.group || "β-lactam";
 
 const ROUTE_OPTS = ["All", "PO", "IV/IM", "Oral+Parenteral"];
 const SPECTRUM_OPTS = ["All", "Narrow", "Broad", "Extended", "MRSA", "Pseudomonas"];
@@ -114,28 +151,78 @@ function DrugCard({ drug, familyTheme }) {
 export default function DrugsPage() {
   const [routeFilter, setRouteFilter] = useState("All");
   const [spectrumFilter, setSpectrumFilter] = useState("All");
+  const [activeGroup, setActiveGroup] = useState("all");
   const [activeClass, setActiveClass] = useState("all");
 
+  // Classes visible in the class pill bar depend on the selected group.
+  const classesForGroup = useMemo(() => {
+    if (activeGroup === "all") return DRUG_CLASSES;
+    return DRUG_CLASSES.filter((cls) => classGroup(cls) === activeGroup);
+  }, [activeGroup]);
+
   const filteredClasses = useMemo(() => {
-    return DRUG_CLASSES.map((cls) => {
-      const drugs = cls.drugs.filter(
-        (d) => matchesRoute(d.route, routeFilter) && matchesSpectrum(d, spectrumFilter)
-      );
-      return { ...cls, drugs };
-    }).filter((cls) => (activeClass === "all" || cls.id === activeClass) && cls.drugs.length > 0);
-  }, [routeFilter, spectrumFilter, activeClass]);
+    return classesForGroup
+      .map((cls) => {
+        const drugs = cls.drugs.filter(
+          (d) => matchesRoute(d.route, routeFilter) && matchesSpectrum(d, spectrumFilter)
+        );
+        return { ...cls, drugs };
+      })
+      .filter((cls) => (activeClass === "all" || cls.id === activeClass) && cls.drugs.length > 0);
+  }, [classesForGroup, routeFilter, spectrumFilter, activeClass]);
 
   const totalDrugs = filteredClasses.reduce((n, c) => n + c.drugs.length, 0);
 
+  // Unique groups present in the data, in a stable order
+  const availableGroups = useMemo(() => {
+    const order = ["β-lactam", "cell-wall", "membrane", "protein-30s", "protein-50s", "nucleic-acid", "folate", "other-cell-wall"];
+    const present = new Set(DRUG_CLASSES.map(classGroup));
+    return order.filter((g) => present.has(g));
+  }, []);
+
   return (
     <div className="animate-fade">
-      <h1 className="font-display text-2xl font-bold text-navy mb-1">💊 β-Lactam Drug Reference</h1>
+      <h1 className="font-display text-2xl font-bold text-navy mb-1">💊 Antimicrobial Drug Reference</h1>
       <p className="text-gray-500 text-sm mb-5">
-        Med-chem focused. Structure, SAR, stability, and why each modification matters — sourced from Dr. Virga&rsquo;s β-lactams materials.
+        Med-chem focused. Structure, pharmacophore, SAR, and why each modification matters — sourced from Dr. Virga&rsquo;s β-lactams and Antimicrobial Coverage materials.
       </p>
 
       {/* Filters */}
       <div className="section-card p-4 mb-6">
+        {/* Mechanism group filter */}
+        <div className="mb-3 pb-3 border-b border-gray-100">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Mechanism</div>
+          <div className="flex gap-1 flex-wrap">
+            <button
+              onClick={() => { setActiveGroup("all"); setActiveClass("all"); }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all ${
+                activeGroup === "all"
+                  ? "bg-navy text-white border-navy"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+              }`}
+            >
+              All
+            </button>
+            {availableGroups.map((g) => {
+              const meta = GROUP_META[g];
+              const active = activeGroup === g;
+              return (
+                <button
+                  key={g}
+                  onClick={() => { setActiveGroup(g); setActiveClass("all"); }}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all ${
+                    active
+                      ? "bg-navy text-white border-navy"
+                      : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                  }`}
+                >
+                  {meta.emoji} {meta.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="flex gap-4 flex-wrap">
           <div className="flex-1 min-w-[180px]">
             <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Route</div>
@@ -175,30 +262,33 @@ export default function DrugsPage() {
           </div>
         </div>
 
-        <div className="mt-3 pt-3 border-t border-gray-100 flex gap-1 flex-wrap">
-          <button
-            onClick={() => setActiveClass("all")}
-            className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all ${
-              activeClass === "all"
-                ? "bg-coral text-white border-coral"
-                : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
-            }`}
-          >
-            All classes
-          </button>
-          {DRUG_CLASSES.map((cls) => (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Class</div>
+          <div className="flex gap-1 flex-wrap">
             <button
-              key={cls.id}
-              onClick={() => setActiveClass(cls.id)}
+              onClick={() => setActiveClass("all")}
               className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all ${
-                activeClass === cls.id
+                activeClass === "all"
                   ? "bg-coral text-white border-coral"
                   : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
               }`}
             >
-              {cls.tag}
+              All classes
             </button>
-          ))}
+            {classesForGroup.map((cls) => (
+              <button
+                key={cls.id}
+                onClick={() => setActiveClass(cls.id)}
+                className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all ${
+                  activeClass === cls.id
+                    ? "bg-coral text-white border-coral"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                }`}
+              >
+                {cls.tag}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="mt-3 text-[11px] text-gray-400">
