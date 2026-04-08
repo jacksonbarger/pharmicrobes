@@ -74,10 +74,11 @@ export const SEARCH_INDEX = [
   // Decision tree leaves
   ...flattenTree(TREE),
 
-  // Study guide chunks
+  // Study guide chunks — both instructors. Tag by instructor in the title.
   ...GUIDE_CONTENT.map((g) => ({
     kind: "guide",
-    title: `${g.topic} — ${g.section}`,
+    cat: g.instructor || "weldon",
+    title: `${g.topic} — ${g.section}${g.instructor === "virga" ? " (Virga)" : g.instructor === "weldon" ? " (Weldon)" : ""}`,
     body: g.text,
     href: "/guide",
   })),

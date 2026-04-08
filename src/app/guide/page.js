@@ -1,27 +1,70 @@
-const S = ({color,title,icon,children}) => (
+"use client";
+import { useState } from "react";
+
+// ─── Shared layout helpers ──────────────────────────────────────────────
+const S = ({ color, title, icon, children }) => (
   <div className="section-card mb-6">
     <div className={`${color} text-white px-5 py-3 font-display font-bold text-base flex items-center gap-2`}>
-      <span>{icon}</span>{title}
+      <span>{icon}</span>
+      {title}
     </div>
     <div className="p-5 text-sm leading-relaxed">{children}</div>
   </div>
 );
-const T = ({headers,rows,headerClass="bg-navy"}) => (
+
+const T = ({ headers, rows, headerClass = "bg-navy" }) => (
   <div className="overflow-x-auto my-3">
     <table className="w-full text-xs border-collapse">
-      <thead><tr>{headers.map((h,i)=><th key={i} className={`${headerClass} text-white p-2 text-left font-semibold`}>{h}</th>)}</tr></thead>
-      <tbody>{rows.map((row,i)=><tr key={i} className={i%2?"bg-gray-50":""}>{row.map((c,j)=><td key={j} className="p-2 border-b border-gray-100 align-top" dangerouslySetInnerHTML={{__html:c}}/>)}</tr>)}</tbody>
+      <thead>
+        <tr>
+          {headers.map((h, i) => (
+            <th key={i} className={`${headerClass} text-white p-2 text-left font-semibold`}>
+              {h}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={i} className={i % 2 ? "bg-gray-50" : ""}>
+            {row.map((c, j) => (
+              <td
+                key={j}
+                className="p-2 border-b border-gray-100 align-top"
+                dangerouslySetInnerHTML={{ __html: c }}
+              />
+            ))}
+          </tr>
+        ))}
+      </tbody>
     </table>
   </div>
 );
-const K = ({children}) => <div className="bg-gold-light border-l-4 border-gold px-4 py-3 rounded-r-lg my-3 text-sm">{children}</div>;
 
-export default function GuidePage() {
+const K = ({ children }) => (
+  <div className="bg-gold-light border-l-4 border-gold px-4 py-3 rounded-r-lg my-3 text-sm">
+    {children}
+  </div>
+);
+
+// Inline figure with caption — used to embed SAR / structural diagrams
+// extracted from the original lecture decks. Plain <img> because the site
+// is a static export.
+const Fig = ({ src, alt, caption, max = "max-h-72" }) => (
+  <figure className="my-4 bg-white border border-gray-200 rounded-lg p-3">
+    <img src={src} alt={alt} className={`w-full ${max} object-contain mx-auto`} loading="lazy" />
+    {caption && (
+      <figcaption className="mt-2 text-[11px] text-gray-600 leading-relaxed italic text-center">
+        {caption}
+      </figcaption>
+    )}
+  </figure>
+);
+
+// ─── Weldon — Medical Microbiology ─────────────────────────────────────
+function WeldonGuide() {
   return (
-    <div className="animate-fade">
-      <h1 className="font-display text-2xl font-bold text-navy mb-1">📖 Complete Study Guide</h1>
-      <p className="text-gray-500 text-sm mb-6">All content from both lectures organized by topic.</p>
-
+    <>
       <S color="bg-teal" title="Chain of Infection & Transmission" icon="🔗">
         <T headers={["Link","Description"]} rows={[
           ["<b>Pathogen</b>","Features allowing colonization & damage"],
@@ -188,6 +231,211 @@ export default function GuidePage() {
           ["<b>Persister Cells</b>","Dormant, not killed by drugs","Stationary phase / non-dividing"],
         ]}/>
       </S>
+    </>
+  );
+}
+
+// ─── Virga — β-Lactams & Antimicrobials ───────────────────────────────
+function VirgaGuide() {
+  return (
+    <>
+      <S color="bg-navy" title="Discovery & Development of Penicillin" icon="📜">
+        <T headers={["Year","Event"]} rows={[
+          ["<b>1929</b>","Alexander Fleming discovers a fungus producing a clear zone of bacterial inhibition. Names it <i>penicillin</i> but cannot isolate it."],
+          ["<b>1939</b>","Florey and Chain isolate and characterize penicillin. First clinical trials in humans."],
+          ["<b>(Heatley)</b>","Norman Heatley, technician, develops the base/acid extraction protocol from 'mold juice.'"],
+          ["<b>1943</b>","Large-scale production established. 'Controlled fermentation' directs the formation of specific penicillin types."],
+          ["<b>1948</b>","Giuseppe Brotzu isolates <i>Cephalosporium acremonium</i> from a sewage outflow; cephalosporin C later characterized by Abraham and Newton at Florey's lab."],
+          ["<b>1955</b>","Ernst Chain at Beecham Pharmaceuticals suggests semi-synthetic modification of a common penicillin nucleus → leads to isolation of 6-APA."],
+        ]}/>
+        <K><b>Chemical instability of natural penicillins:</b> unstable to acid, base, and solution at room temperature over time. Fleming originally believed penicillin was an enzyme and could not isolate the active component — so he moved on to sulfonamides. The β-lactam ring's inherent reactivity is exactly what makes it both a drug and a chemistry challenge.</K>
+        <K><b>Penicillin G vs Penicillin V:</b> both natural. Pen G is highly acid-labile → poor oral bioavailability → IV/IM. Pen V uses phenoxyacetic acid as its side-chain building block instead of phenylacetic acid — the phenoxy oxygen withdraws electrons from the β-lactam carbonyl, conferring enough acid stability for oral dosing. Both remain narrow-spectrum and β-lactamase susceptible.</K>
+      </S>
+
+      <S color="bg-gp" title="Peptidoglycan Target Review" icon="🧱">
+        <K><b>The target:</b> the peptidoglycan layer of the bacterial cell wall provides strength and rigidity. In Gram-positive species it may be 25-40 layers thick (~20% of dry weight). In Gram-negatives it's ~10% of dry weight, with an outer lipid bilayer.</K>
+        <Fig
+          src="/sar/peptidoglycan-crosslink.jpeg"
+          alt="Peptidoglycan structure: alternating NAM and NAG sugars cross-linked by stem peptides via a pentaglycyl bridge."
+          caption="Peptidoglycan repeating unit (Virga slides). NAM-NAG backbone with the L-Ala / D-Glu / L-Lys / D-Ala stem peptide. The pentaglycyl bridge connects the ε-amino of L-Lys on one strand to the carbonyl of D-Ala on the next — this is the bond PBPs forge and β-lactams block by mimicking D-Ala-D-Ala."
+        />
+        <h3 className="font-display text-navy font-bold mt-4 mb-2">Repeating Unit</h3>
+        <T headers={["Component","Detail"]} rows={[
+          ["<b>NAG + NAM</b>","Alternating N-acetylglucosamine and N-acetylmuramic acid, linked by a 1,4-β glycosidic bond (broken by lysozyme)"],
+          ["<b>Stem tetrapeptide</b>","Attached to NAM's free acid: L-Ala → D-Glu → L-Lys → D-Ala (starts as a pentapeptide with a terminal D-Ala-D-Ala)"],
+          ["<b>Cross-link</b>","Pentaglycyl bridge between the ε-amino of Lys and the carboxyl of D-Ala of the adjacent strand"],
+          ["<b>Transpeptidase (PBPs)</b>","Enzyme that catalyzes cross-linking — recognizes the terminal D-Ala-D-Ala and cleaves to form the peptide bond. Over 2,500 PBP variants identified."],
+        ]}/>
+        <h3 className="font-display text-navy font-bold mt-4 mb-2">Three Assembly Phases</h3>
+        <T headers={["Phase","What happens"]} rows={[
+          ["<b>Cytoplasmic</b>","NAG and NAM built by <i>murA-F</i>-encoded enzymes in the cytoplasm. Fosfomycin targets MurA here."],
+          ["<b>Membrane-associated</b>","NAG-NAM units linked to the lipid carrier (bactoprenol) for transport across the plasma membrane."],
+          ["<b>Extracytoplasmic</b>","Cell wall units move to the outer lipid layer; PBPs incorporate them into the growing peptidoglycan by cross-linking adjacent strands."],
+        ]}/>
+      </S>
+
+      <S color="bg-coral" title="How β-Lactams Kill Bacteria" icon="⚛️">
+        <K><b>The trick:</b> β-lactams mimic the D-Ala-D-Ala terminus of the peptidoglycan stem peptide. The PBP active-site serine attacks the β-lactam carbonyl thinking it's the normal substrate — but instead of cleaving and releasing, the β-lactam forms an irreversible covalent bond. The PBP is permanently inactivated, the cell wall can no longer be cross-linked, and the bacterium lyses during growth.</K>
+        <h3 className="font-display text-navy font-bold mt-4 mb-2">β-Lactam Ring Essentials</h3>
+        <T headers={["Feature","Why it matters"]} rows={[
+          ["<b>4-membered ring (N1-C2-C3-C4)</b>","Highly strained → reactive. The strain is what drives PBP acylation."],
+          ["<b>Fusion to a 5- or 6-membered ring</b>","Penicillins fuse to a thiazolidine; cephalosporins fuse to a cefem (6-membered). Fusion adds additional ring strain, increasing reactivity. Carbapenems replace the sulfur. Monobactams skip the fused ring entirely."],
+          ["<b>Ring strain = reactivity</b>","The lactam nitrogen does NOT behave like a typical tertiary amide because any double-bond formation would force the rings into an impossible planar conformation."],
+          ["<b>3 chiral centers (2S, 5R, 6R)</b>","All penicillin derivatives share this absolute configuration."],
+          ["<b>R-group on the amide</b>","Only SAR handle. Affects spectrum, stability, and bioavailability."],
+          ["<b>Carboxylic acid</b>","Binds PBP active site as the carboxylate ion."],
+        ]}/>
+        <K><b>Why irreversible?</b> After the PBP serine attacks and opens the β-lactam, the thiazolidinone ring (on penicillins) cannot leave — it blocks the entry of the pentaglycyl bridge's amino terminus that would normally complete the reaction. The enzyme is stuck with the acyl-enzyme intermediate forever. In contrast, the normal D-Ala-D-Ala substrate releases the terminal D-Ala after the serine attack, freeing the enzyme.</K>
+      </S>
+
+      <S color="bg-teal" title="The Four β-Lactam Classes at a Glance" icon="💊">
+        <T headers={["Class","Nucleus","Defining Feature","Spectrum"]} rows={[
+          ["<b>Penicillins</b>","6-APA","β-lactam + thiazolidine","Narrow to extended. Spectrum is tuned entirely by the C6 R-group."],
+          ["<b>Cephalosporins</b>","7-ACA","β-lactam + 6-membered cefem ring","5 generations, each broader. Two SAR handles: C7 acyl (spectrum) and C3 leaving group (PK, protein binding)."],
+          ["<b>Carbapenems</b>","Carbapenem nucleus","β-lactam + 5-ring with C instead of S; trans-hydroxyethyl at C6","Very broad. Stable against most β-lactamases. Reserved for MDR/severe infections."],
+          ["<b>Monobactam</b>","Monocyclic β-lactam","No fused ring; N1 sulfonate activates the carbonyl","Gram− only. Safe in true penicillin allergy (no shared fused ring for IgE cross-reactivity)."],
+        ]}/>
+        <K><b>Key idea:</b> all four classes use the same mechanism (PBP acylation via D-Ala-D-Ala mimicry) but they differ in which PBPs they prefer, how well they penetrate the outer membrane (Gram−), and how resistant they are to β-lactamases. For drug-level detail, see the <b>Drug Reference</b> page.</K>
+      </S>
+
+      <S color="bg-coral" title="Resistance Mechanisms" icon="🛡️">
+        <T headers={["Mechanism","Details","Key Examples"]} rows={[
+          ["<b>β-lactamase hydrolysis</b>","Enzyme opens the β-lactam ring → inactive drug","Most clinically important. Most forms are plasmid-encoded and transferable."],
+          ["<b>Altered PBPs</b>","New PBP has low affinity for β-lactams","<b>MRSA</b>: <i>mecA</i> → PBP2a. <b>Pneumococci</b>: altered PBP1/2 → penicillin-resistant strains."],
+          ["<b>Reduced penetration</b>","Loss or down-regulation of outer-membrane porins","Gram− only. Combines with β-lactamases for high-level resistance."],
+          ["<b>Efflux pumps</b>","Pump drug back out","Found in both Gram+ and Gram−; broad or drug-specific."],
+          ["<b>β-lactamase bypass at MurA</b>","Fosfomycin's MurA target is upstream of PBPs → no cross-resistance","Fosfomycin is the only β-lactam-pathway-active drug not touched by β-lactamases."],
+        ]}/>
+        <h3 className="font-display text-navy font-bold mt-4 mb-2">Ambler Classification of β-Lactamases</h3>
+        <T headers={["Class","Mechanism","Notable Members","Inhibited by"]} rows={[
+          ["<b>A</b>","Serine active site","Penicillinases (TEM-1/2, SHV-1), ESBLs (cefotaxime/ceftriaxone/ceftazidime/aztreonam), KPC carbapenemases","Clavulanate, sulbactam, tazobactam, avibactam, relebactam, vaborbactam"],
+          ["<b>B</b>","Zinc (metallo-)","NDM, VIM, IMP","NONE currently — use cefiderocol"],
+          ["<b>C</b>","Serine (chromosomal)","AmpC (SPACE bugs: <i>Serratia, Pseudomonas, Proteus, Acinetobacter, Citrobacter, Enterobacter</i>)","Avibactam, relebactam"],
+          ["<b>D</b>","Serine (OXA-type)","OXA-48","Avibactam (some), relebactam"],
+        ]}/>
+        <K><b>β-lactamase inhibitors (BLIs):</b> poor antibiotics on their own but synergize with β-lactams. Classical BLIs (clavulanate, sulbactam, tazobactam) are suicide substrates — they irreversibly acylate the enzyme's serine. Newer diazabicyclooctanes (avibactam, relebactam) reversibly carbamoylate the serine, letting one molecule inhibit multiple enzymes. Vaborbactam is a boronic-acid transition-state mimic.</K>
+        <Fig
+          src="/sar/cefiderocol-sar.png"
+          alt="Cefiderocol structure annotated with the C-7 acylamino side chain, C-3 catechol/pyrrolidinium side chain, and charged groups."
+          caption="Cefiderocol (5th-gen cephalosporin) is the SAR answer to metallo-β-lactamases. The C-7 acylamino side chain (left) provides serine-β-lactamase stability; the C-3 catechol side chain (right) chelates Fe³⁺ and rides the bacterial siderophore uptake system through the outer membrane (Trojan horse); charged groups protect against the zinc-active-site metallo-β-lactamases that destroy other carbapenems."
+        />
+      </S>
+
+      <S color="bg-navy" title="Pharmacokinetics & PD Principles" icon="📊">
+        <K><b>Time-dependent killing:</b> β-lactam efficacy depends on how long the free drug concentration stays above the MIC (%T&gt;MIC), NOT peak concentration. This is why β-lactams are dosed q4-6-8h (not once daily like aminoglycosides). Continuous infusion of piperacillin-tazobactam is sometimes used for severe infections to maximize %T&gt;MIC.</K>
+        <T headers={["Property","Notes"]} rows={[
+          ["<b>Oral bioavailability</b>","Varies with side chain. Pen G: poor. Amoxicillin: excellent (~90%). Ampicillin: fair. Most cephalosporins: oral forms have specific PK modifications (axetil prodrug for cefuroxime, esterase-resistant C3 for cefazolin's cephalexin counterpart)."],
+          ["<b>Half-life</b>","Most β-lactams have short half-lives (1-2 h). Ceftriaxone is the standout at ~8 h → once-daily dosing. Ertapenem's 95% protein binding extends its half-life to ~4 h."],
+          ["<b>Renal vs biliary clearance</b>","Most β-lactams are renally cleared → dose-adjust in renal impairment. <b>Ceftriaxone</b> is biliary-cleared → no renal adjustment (but avoid in neonates)."],
+          ["<b>CSF penetration</b>","3rd/4th/5th gen cephalosporins, carbapenems (meropenem > imipenem for CNS), and cefuroxime (only 2nd gen with meaningful BBB crossing)."],
+          ["<b>Imipenem + cilastatin</b>","Imipenem is inactivated by human renal dehydropeptidase-I. Cilastatin inhibits the enzyme to preserve urinary levels. Fixed 1:1 combination."],
+        ]}/>
+      </S>
+
+      <S color="bg-coral" title="Allergy & Hypersensitivity" icon="⚠️">
+        <K><b>Reported vs actual penicillin allergy:</b> up to 10% of patients report a penicillin allergy. In clinical practice only ~10-20% of those actually have a true IgE-mediated reaction on testing. The vast majority can safely receive β-lactams.</K>
+        <h3 className="font-display text-navy font-bold mt-4 mb-2">Mechanism</h3>
+        <T headers={["Step","Detail"]} rows={[
+          ["<b>Hapten formation</b>","The β-lactam carbonyl covalently modifies host proteins — specifically, the penicilloyl group attaches to Lys 199 (and other Lys residues) of serum albumin."],
+          ["<b>Antigen presentation</b>","The modified albumin is recognized as foreign, triggering IgE production."],
+          ["<b>Type I reaction on re-exposure</b>","IgE bound to mast cells → histamine release → urticaria, angioedema, bronchospasm, anaphylaxis."],
+          ["<b>Range of severity</b>","Mild rash to anaphylaxis (1-10% of population for any severity)."],
+        ]}/>
+        <h3 className="font-display text-navy font-bold mt-4 mb-2">Cross-Reactivity</h3>
+        <T headers={["Situation","Risk"]} rows={[
+          ["<b>Penicillin → cephalosporin</b>","Clinical incidence ~2-6% (much lower than the often-quoted 10%). Higher with early-generation cephalosporins (shared benzyl side chain with penicillin)."],
+          ["<b>Penicillin → 3rd+ gen cephalosporin</b>","Very low (<1%) because their side chains are structurally distinct (ATMO group)."],
+          ["<b>Penicillin → aztreonam</b>","Essentially zero (except ceftazidime-allergic patients — shared side chain with aztreonam)."],
+          ["<b>Penicillin → carbapenem</b>","Very low, likely <1%."],
+        ]}/>
+        <K><b>Management:</b> penicillin skin testing is available. A negative skin test makes true IgE-mediated reaction unlikely. Desensitization protocols exist when penicillin is the only viable option (e.g., syphilis in pregnancy).</K>
+      </S>
+
+      <S color="bg-teal" title="Spectrum & Clinical Principles" icon="🎯">
+        <T headers={["Concept","Detail"]} rows={[
+          ["<b>Narrow vs broad spectrum</b>","Narrow: fewer organisms, less disruption to microbiota → preferred when pathogen is known. Broad: empiric coverage before culture results, or polymicrobial infections."],
+          ["<b>MIC (Minimum Inhibitory Concentration)</b>","Lowest drug concentration that prevents visible growth in vitro. Defines S/I/R breakpoints. Example: <i>S. pneumoniae</i> penicillin-susceptible <0.1 mcg/mL, intermediate 0.1-1.0, resistant ≥1.0."],
+          ["<b>Empiric therapy</b>","Start before culture results based on likely organisms, severity, and local antibiogram. Narrow to definitive therapy once cultures return."],
+          ["<b>Stewardship</b>","Use the narrowest effective agent for the shortest effective duration. About 20-30% of outpatient antibiotic prescriptions are unnecessary."],
+          ["<b>Drug of choice (DOC)</b>","The preferred agent based on efficacy, toxicity, spectrum, cost, and local resistance. Changes over time as resistance emerges."],
+        ]}/>
+        <h3 className="font-display text-navy font-bold mt-4 mb-2">Common Empiric Choices</h3>
+        <T headers={["Indication","Empiric Agent(s)","Rationale"]} rows={[
+          ["<b>Surgical prophylaxis</b>","Cefazolin","MSSA/strep coverage, long-enough half-life for single-dose pre-op, narrow = stewardship-friendly"],
+          ["<b>Community-acquired pneumonia</b>","Ceftriaxone + azithromycin","Ceftriaxone covers <i>S. pneumoniae, H. influenzae</i>; azithromycin covers atypicals (Legionella, Mycoplasma, Chlamydia)"],
+          ["<b>Bacterial meningitis (adult)</b>","Ceftriaxone + vancomycin","3rd gen for gram- and resistant pneumococci; vanco for highly-resistant pneumococci; add ampicillin for Listeria in >50 or IC"],
+          ["<b>Hospital-acquired pneumonia / VAP</b>","Pip-tazo or cefepime + vancomycin","Broad gram- incl Pseudomonas + MRSA coverage"],
+          ["<b>Febrile neutropenia</b>","Cefepime or pip-tazo","Anti-pseudomonal β-lactam monotherapy is first-line per IDSA"],
+          ["<b>MRSA bacteremia</b>","Vancomycin or daptomycin","Daptomycin if MIC creep or source control issue"],
+          ["<b>C. difficile (non-severe)</b>","Fidaxomicin (1st) or oral vancomycin","Fidaxomicin has lower recurrence; metronidazole now second-line"],
+          ["<b>Uncomplicated cystitis</b>","Nitrofurantoin, TMP-SMX, or fosfomycin","Narrow spectrum, concentrate in urine"],
+        ]}/>
+      </S>
+
+      <S color="bg-gold" title="Non-β-Lactam Mechanism Overview" icon="💉">
+        <K><b>Cross-reference:</b> for full drug-level detail on every class below, see the <b>Drug Reference</b> page (💊). This section is a conceptual map so you can place each drug in its mechanism family.</K>
+        <Fig
+          src="/sar/antibiotic-targets.png"
+          alt="Antibiotic mechanism overview diagram: cell wall, protein synthesis, DNA, RNA, and folate/metabolism inhibitors mapped to a generic bacterium."
+          caption="Antibiotic targets, from the Virga deck. Five mechanism families: cell wall (β-lactams, glycopeptides, fosfomycin), 30S/50S protein synthesis, DNA (fluoroquinolones, nitroimidazoles), RNA polymerase (rifamycins, fidaxomicin), and folate (sulfonamides + DHFR inhibitors). Use this map to place every drug in the table below."
+          max="max-h-96"
+        />
+        <T headers={["Target","Classes","Why it matters"]} rows={[
+          ["<b>Cell wall (non-β-lactam)</b>","Glycopeptides (vancomycin, telavancin), Fosfomycin","Vancomycin binds the D-Ala-D-Ala <i>substrate</i> (not PBP) — different target, no cross-resistance. VRE/VRSA = D-Ala-D-Lac mutation. Fosfomycin inhibits MurA, the first step of PG synthesis."],
+          ["<b>Cell membrane</b>","Lipopeptides (daptomycin), Polymyxins (colistin)","Daptomycin forms Ca²⁺-dependent pores in Gram+ membranes — inactivated by pulmonary surfactant (no pneumonia use). Polymyxins act as cationic detergents on Gram- LPS — nephrotoxic 'last resort.'"],
+          ["<b>Protein synthesis — 30S</b>","Aminoglycosides (gentamicin, tobramycin, amikacin), Tetracyclines (doxycycline, tigecycline)","Aminoglycosides cause codon misreading → bactericidal, concentration-dependent, once-daily high-dose. Tetracyclines block tRNA A-site binding → bacteriostatic, broad incl atypicals."],
+          ["<b>Protein synthesis — 50S</b>","Macrolides (azithro, clarithro, erythro), Lincosamides (clindamycin), Oxazolidinones (linezolid, tedizolid), Streptogramins (quinupristin/dalfopristin)","All bind the 23S rRNA. Macrolides/clindamycin/streptogramins share the MLS binding site → cross-resistance via <i>erm</i> methylases. Linezolid binds a UNIQUE site → no cross-resistance, works against MRSA + VRE."],
+          ["<b>DNA synthesis</b>","Fluoroquinolones (cipro, levo, moxi, gemi)","Poison the DNA gyrase/topoisomerase IV-DNA complex, trapping double-strand breaks → bactericidal. Black-box: tendon rupture, QT, C. diff, aortic aneurysm."],
+          ["<b>DNA damage (anaerobic activation)</b>","Nitroimidazoles (metronidazole), Nitrofurans (nitrofurantoin)","Both are prodrugs. Anaerobic bacterial enzymes reduce the nitro group to reactive intermediates that damage DNA. Metronidazole: anaerobes + protozoa. Nitrofurantoin: urinary concentrating for cystitis."],
+          ["<b>RNA polymerase</b>","Rifamycins (rifampin), Macrocyclics (fidaxomicin)","Bind bacterial (not eukaryotic) RNA polymerase β-subunit. Rifampin: always combo therapy (rapid resistance). Fidaxomicin: narrow anti-C.diff, minimal absorption, spares Bacteroides → lower recurrence."],
+          ["<b>Folate</b>","Sulfonamides + DHFR inhibitors (TMP-SMX)","Sequential pathway blockade: sulfamethoxazole inhibits DHPS (mimics PABA), trimethoprim inhibits DHFR. Synergistic bactericidal. Humans don't synthesize folate → bacteria-selective."],
+        ]}/>
+        <K><b>Bactericidal vs Bacteriostatic:</b> Bactericidal = kills directly (β-lactams, vanco, aminoglycosides, fluoroquinolones, daptomycin). Bacteriostatic = inhibits growth, immune system clears (tetracyclines, macrolides, clindamycin, sulfonamides, linezolid mostly). The distinction matters for immunocompromised patients and for infections like endocarditis where bactericidal agents are preferred.</K>
+      </S>
+    </>
+  );
+}
+
+// ─── Main page ──────────────────────────────────────────────────────────
+export default function GuidePage() {
+  const [tab, setTab] = useState("weldon");
+
+  return (
+    <div className="animate-fade">
+      <h1 className="font-display text-2xl font-bold text-navy mb-1">📖 Complete Study Guide</h1>
+      <p className="text-gray-500 text-sm mb-5">Two instructors, two halves of the course. Pick a tab to jump in.</p>
+
+      {/* Instructor tabs */}
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => setTab("weldon")}
+          className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all text-left ${
+            tab === "weldon"
+              ? "bg-navy text-white border-transparent shadow-md"
+              : "bg-white text-navy border-navy hover:brightness-95"
+          }`}
+        >
+          <div className="font-bold">🧫 Weldon — Medical Microbiology</div>
+          <div className={`text-[11px] mt-0.5 ${tab === "weldon" ? "text-white/70" : "text-gray-500"}`}>
+            Chain of infection, cell wall, virulence, genetics, resistance
+          </div>
+        </button>
+        <button
+          onClick={() => setTab("virga")}
+          className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all text-left ${
+            tab === "virga"
+              ? "bg-coral text-white border-transparent shadow-md"
+              : "bg-white text-coral border-coral hover:brightness-95"
+          }`}
+        >
+          <div className="font-bold">💊 Virga — β-Lactams & Antimicrobials</div>
+          <div className={`text-[11px] mt-0.5 ${tab === "virga" ? "text-white/70" : "text-gray-500"}`}>
+            Penicillin history, PBP mechanism, resistance, PK/PD, clinical principles
+          </div>
+        </button>
+      </div>
+
+      {tab === "weldon" ? <WeldonGuide /> : <VirgaGuide />}
     </div>
   );
 }

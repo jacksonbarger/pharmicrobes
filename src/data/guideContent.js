@@ -1,8 +1,12 @@
 // Flat text extract of /guide content for search indexing.
 // Each entry = one searchable chunk. Keep in sync with src/app/guide/page.js.
 // When you change a table row or callout in the guide, mirror it here.
+//
+// The page is split into Weldon (microbiology) and Virga (β-lactams &
+// antimicrobials) tabs. Entries below are kept in two arrays so search hits
+// can label which instructor the chunk belongs to.
 
-export const GUIDE_CONTENT = [
+const WELDON = [
   // --- Chain of Infection & Transmission ---
   { section: "Chain of Infection & Transmission", topic: "Pathogen", text: "Features allowing colonization & damage." },
   { section: "Chain of Infection & Transmission", topic: "Reservoir", text: "Where pathogen lives: humans (asymptomatic carriers), animals (zoonotic), environment (water, soil, food)." },
@@ -103,4 +107,87 @@ export const GUIDE_CONTENT = [
   { section: "Gram Stain Chart", topic: "GN Lactose Fermenters", text: "Oxidase +: Vibrio cholerae, Aeromonas. Oxidase −: E. coli, Klebsiella, Enterobacter, Citrobacter." },
   { section: "Gram Stain Chart", topic: "GN Non-lactose Fermenters", text: "Oxidase +: Pseudomonas, Campylobacter, H. pylori, Legionella. Oxidase −: Salmonella, Shigella, Proteus, Serratia." },
   { section: "Gram Stain Chart", topic: "Atypicals", text: "Mycoplasma pneumoniae (no cell wall), M. tuberculosis (acid-fast, mycolic acid), Chlamydia trachomatis (obligate intracellular), Rickettsia rickettsii (obligate intracellular). Spirochetes: Treponema pallidum, Borrelia burgdorferi." },
+];
+
+// ─── Virga — β-Lactams & Antimicrobials ───────────────────────────────
+const VIRGA = [
+  // --- Discovery & Development ---
+  { section: "Discovery & Development", topic: "Fleming 1929", text: "Alexander Fleming discovers a fungus producing a clear zone of bacterial inhibition. Names it penicillin but cannot isolate it. Originally believed it was an enzyme, moved on to sulfonamides." },
+  { section: "Discovery & Development", topic: "Florey, Chain, Heatley", text: "1939 Florey and Chain isolate and characterize penicillin. Norman Heatley develops the base/acid extraction protocol from mold juice. First clinical trials in humans." },
+  { section: "Discovery & Development", topic: "Mass production", text: "1943 large-scale production established. Controlled fermentation directs the formation of specific penicillin types." },
+  { section: "Discovery & Development", topic: "Cephalosporin discovery", text: "1948 Giuseppe Brotzu isolates Cephalosporium acremonium from a sewage outflow. Cephalosporin C later characterized by Abraham and Newton at Florey's lab." },
+  { section: "Discovery & Development", topic: "6-APA semi-synthesis", text: "1955 Ernst Chain at Beecham Pharmaceuticals suggests semi-synthetic modification of a common penicillin nucleus, leading to isolation of 6-aminopenicillanic acid (6-APA)." },
+  { section: "Discovery & Development", topic: "Pen G vs Pen V", text: "Both natural penicillins. Pen G is highly acid-labile so poor oral bioavailability and given IV/IM. Pen V uses phenoxyacetic acid as its side-chain — the phenoxy oxygen withdraws electrons from the β-lactam carbonyl, conferring acid stability for oral dosing. Both narrow-spectrum, both β-lactamase susceptible." },
+  { section: "Discovery & Development", topic: "Chemical instability of natural penicillins", text: "Penicillin G is unstable to acid (penillic acid), base (penicilloic acid), β-lactamase (penicilloic acid), and amidase (6-APA). Every later β-lactam SAR addresses one of these failure modes." },
+
+  // --- Peptidoglycan Target Review ---
+  { section: "Peptidoglycan Target", topic: "Peptidoglycan layer", text: "The peptidoglycan layer of the bacterial cell wall provides strength and rigidity. In Gram-positive species 25-40 layers thick (~20% dry weight). In Gram-negatives ~10% dry weight, with an outer lipid bilayer." },
+  { section: "Peptidoglycan Target", topic: "NAG and NAM repeating unit", text: "Alternating N-acetylglucosamine and N-acetylmuramic acid linked by 1,4-β glycosidic bond (broken by lysozyme). Stem tetrapeptide attached to NAM: L-Ala → D-Glu → L-Lys → D-Ala (starts as a pentapeptide with terminal D-Ala-D-Ala)." },
+  { section: "Peptidoglycan Target", topic: "Pentaglycine cross-link", text: "Pentaglycyl bridge connects the ε-amino of L-Lys on one strand to the carboxyl of D-Ala on the next. Transpeptidase (PBP) cleaves the terminal D-Ala and forms the peptide bond. Over 2,500 PBP variants identified." },
+  { section: "Peptidoglycan Target", topic: "Three assembly phases", text: "Cytoplasmic: NAG/NAM built by murA-F enzymes (fosfomycin targets MurA). Membrane-associated: linked to bactoprenol carrier. Extracytoplasmic: PBPs cross-link strands at the outer face." },
+
+  // --- How β-Lactams Kill Bacteria ---
+  { section: "β-Lactam Mechanism", topic: "D-Ala-D-Ala mimicry", text: "β-lactams mimic the D-Ala-D-Ala terminus of the peptidoglycan stem peptide. The PBP active-site serine attacks the β-lactam carbonyl thinking it's the normal substrate, but instead of cleaving and releasing it forms an irreversible covalent acyl-enzyme. The PBP is permanently inactivated, the cell wall cannot cross-link, and the bacterium lyses." },
+  { section: "β-Lactam Mechanism", topic: "β-lactam ring strain", text: "4-membered β-lactam ring (N1-C2-C3-C4) is highly strained. Fusion to a 5- or 6-membered ring adds further strain. Strain is what drives PBP acylation. The lactam nitrogen does not behave like a typical tertiary amide because any double-bond formation would force the rings into an impossible planar conformation." },
+  { section: "β-Lactam Mechanism", topic: "Why irreversible", text: "After PBP serine opens the β-lactam, the thiazolidinone (penicillins) cannot leave — it blocks entry of the pentaglycyl bridge that would normally complete the reaction. The enzyme is stuck with the acyl-enzyme intermediate forever. In contrast, normal D-Ala-D-Ala releases the terminal D-Ala after serine attack." },
+  { section: "β-Lactam Mechanism", topic: "Three chiral centers", text: "All penicillin derivatives share absolute configuration 2S, 5R, 6R. The R-group on the C6 amide is the only SAR handle and tunes spectrum, stability, and bioavailability." },
+
+  // --- Four β-Lactam Classes at a Glance ---
+  { section: "Four β-Lactam Classes", topic: "Penicillins overview", text: "Nucleus 6-APA (β-lactam fused to thiazolidine). Spectrum is tuned entirely by the C6 R-group. Narrow to extended spectrum depending on side chain." },
+  { section: "Four β-Lactam Classes", topic: "Cephalosporins overview", text: "Nucleus 7-ACA (β-lactam fused to a 6-membered cefem ring). Two SAR handles: C7 acyl side chain (spectrum), C3 leaving group (PK and protein binding). Five generations, each broader than the last." },
+  { section: "Four β-Lactam Classes", topic: "Carbapenems overview", text: "Carbapenem nucleus has β-lactam fused to a 5-membered ring with carbon instead of sulfur, plus a trans-hydroxyethyl at C6. Very broad spectrum, stable against most β-lactamases. Reserved for MDR or severe infections." },
+  { section: "Four β-Lactam Classes", topic: "Monobactams overview", text: "Monocyclic β-lactam — no fused ring. N1 sulfonate activates the carbonyl. Gram-negative only. Safe in true penicillin allergy because there is no shared fused ring for IgE cross-reactivity." },
+
+  // --- Resistance Mechanisms ---
+  { section: "β-Lactam Resistance", topic: "β-lactamase hydrolysis", text: "Enzyme opens the β-lactam ring, inactivating the drug. Most clinically important resistance mechanism. Most forms are plasmid-encoded and transferable." },
+  { section: "β-Lactam Resistance", topic: "Altered PBPs", text: "New PBP has low affinity for β-lactams. MRSA: mecA gene encodes PBP2a. Pneumococci: altered PBP1/2 leading to penicillin-resistant strains." },
+  { section: "β-Lactam Resistance", topic: "Reduced penetration / efflux", text: "Loss of outer-membrane porins (Gram-negative) combines with β-lactamases for high-level resistance. Efflux pumps push drug back out, found in both Gram+ and Gram-." },
+  { section: "β-Lactam Resistance", topic: "Ambler Class A", text: "Serine active site β-lactamases. Penicillinases (TEM-1/2, SHV-1), ESBLs (cefotaxime/ceftriaxone/ceftazidime/aztreonam), KPC carbapenemases. Inhibited by clavulanate, sulbactam, tazobactam, avibactam, relebactam, vaborbactam." },
+  { section: "β-Lactam Resistance", topic: "Ambler Class B (metallo)", text: "Zinc active-site metallo-β-lactamases. NDM, VIM, IMP. NOT inhibited by current BLIs — clinical answer is cefiderocol (siderophore Trojan horse)." },
+  { section: "β-Lactam Resistance", topic: "Ambler Class C (AmpC)", text: "Chromosomal serine β-lactamases. SPACE bugs: Serratia, Pseudomonas, Proteus, Acinetobacter, Citrobacter, Enterobacter. Inhibited by avibactam, relebactam." },
+  { section: "β-Lactam Resistance", topic: "Ambler Class D (OXA)", text: "Serine OXA-type β-lactamases including OXA-48. Some inhibited by avibactam and relebactam." },
+  { section: "β-Lactam Resistance", topic: "BLI mechanisms", text: "Classical BLIs (clavulanate, sulbactam, tazobactam) are suicide substrates that irreversibly acylate the enzyme's serine. Diazabicyclooctanes (avibactam, relebactam) reversibly carbamoylate the serine — one molecule inhibits multiple enzymes. Vaborbactam is a boronic-acid transition-state mimic." },
+  { section: "β-Lactam Resistance", topic: "Cefiderocol SAR", text: "Cefiderocol is a 5th-generation cephalosporin designed to defeat metallo-β-lactamases. C-7 acylamino side chain provides serine-β-lactamase stability; C-3 catechol side chain chelates Fe³⁺ and rides the bacterial siderophore uptake system through the outer membrane (Trojan horse). Charged groups protect against metallo-β-lactamases." },
+
+  // --- PK/PD ---
+  { section: "β-Lactam PK/PD", topic: "Time-dependent killing", text: "β-lactam efficacy depends on how long the free drug concentration stays above the MIC (%T>MIC), not peak concentration. β-lactams are dosed q4-6-8h, not once daily like aminoglycosides. Continuous infusion of pip-tazo is sometimes used for severe infections to maximize %T>MIC." },
+  { section: "β-Lactam PK/PD", topic: "Oral bioavailability", text: "Pen G is poorly absorbed orally. Amoxicillin has excellent (~90%) PO absorption. Ampicillin is fair. Cephalosporin oral forms use specific PK modifications such as the axetil prodrug for cefuroxime." },
+  { section: "β-Lactam PK/PD", topic: "Half-life", text: "Most β-lactams have short half-lives (1-2 h). Ceftriaxone is the standout at ~8 h enabling once-daily dosing. Ertapenem's 95% protein binding extends its half-life to ~4 h." },
+  { section: "β-Lactam PK/PD", topic: "Clearance", text: "Most β-lactams are renally cleared and need dose adjustment in renal impairment. Ceftriaxone is biliary-cleared so no renal adjustment needed (avoid in neonates)." },
+  { section: "β-Lactam PK/PD", topic: "CSF penetration", text: "3rd/4th/5th gen cephalosporins, carbapenems (meropenem > imipenem for CNS), and cefuroxime (only 2nd gen with meaningful BBB crossing) achieve adequate CSF concentrations." },
+  { section: "β-Lactam PK/PD", topic: "Imipenem + cilastatin", text: "Imipenem is inactivated by human renal dehydropeptidase-I. Cilastatin inhibits the enzyme to preserve urinary levels. Fixed 1:1 combination." },
+
+  // --- Allergy ---
+  { section: "Penicillin Allergy", topic: "Reported vs actual", text: "Up to 10% of patients report a penicillin allergy, but only ~10-20% of those have a true IgE-mediated reaction on testing. The vast majority can safely receive β-lactams." },
+  { section: "Penicillin Allergy", topic: "Hapten formation", text: "The β-lactam carbonyl covalently modifies host proteins — penicilloyl group attaches to Lys 199 (and other Lys residues) of serum albumin. The modified albumin is recognized as foreign, triggering IgE production and Type I hypersensitivity on re-exposure." },
+  { section: "Penicillin Allergy", topic: "Cross-reactivity", text: "Penicillin → cephalosporin clinical incidence ~2-6%, higher with early-generation cephalosporins (shared benzyl side chain). Penicillin → 3rd+ gen cephalosporin <1% (distinct ATMO group). Penicillin → aztreonam essentially zero (except ceftazidime-allergic patients due to shared side chain). Penicillin → carbapenem very low, likely <1%." },
+  { section: "Penicillin Allergy", topic: "Skin test and desensitization", text: "Penicillin skin testing is available; a negative skin test makes IgE-mediated reaction unlikely. Desensitization protocols exist when penicillin is the only viable option (e.g., syphilis in pregnancy)." },
+
+  // --- Spectrum & Clinical Principles ---
+  { section: "Clinical Principles", topic: "Narrow vs broad spectrum", text: "Narrow: fewer organisms, less microbiota disruption, preferred when pathogen is known. Broad: empiric coverage before culture results, or polymicrobial infections." },
+  { section: "Clinical Principles", topic: "MIC", text: "Minimum Inhibitory Concentration is the lowest drug concentration that prevents visible growth in vitro. Defines S/I/R breakpoints. Example: S. pneumoniae penicillin-susceptible <0.1 mcg/mL, intermediate 0.1-1.0, resistant ≥1.0." },
+  { section: "Clinical Principles", topic: "Empiric therapy and stewardship", text: "Start before culture results based on likely organisms, severity, and local antibiogram. Narrow to definitive therapy when cultures return. Use the narrowest effective agent for the shortest effective duration. About 20-30% of outpatient antibiotic prescriptions are unnecessary." },
+  { section: "Clinical Principles", topic: "Surgical prophylaxis", text: "Cefazolin is first-line for surgical prophylaxis. Covers MSSA and strep, has long-enough half-life for single-dose pre-op, and is narrow-spectrum (stewardship-friendly)." },
+  { section: "Clinical Principles", topic: "Community-acquired pneumonia", text: "Empiric: ceftriaxone + azithromycin. Ceftriaxone covers S. pneumoniae and H. influenzae; azithromycin covers atypicals (Legionella, Mycoplasma, Chlamydia)." },
+  { section: "Clinical Principles", topic: "Bacterial meningitis (adult)", text: "Ceftriaxone + vancomycin. 3rd gen for Gram-negatives and resistant pneumococci; vancomycin for highly-resistant pneumococci. Add ampicillin for Listeria coverage in patients >50 or immunocompromised." },
+  { section: "Clinical Principles", topic: "HAP/VAP and febrile neutropenia", text: "Hospital-acquired pneumonia and ventilator-associated pneumonia: piperacillin-tazobactam or cefepime + vancomycin (broad Gram-negative incl Pseudomonas plus MRSA). Febrile neutropenia: cefepime or pip-tazo monotherapy first-line per IDSA." },
+  { section: "Clinical Principles", topic: "MRSA bacteremia", text: "Vancomycin first-line. Daptomycin if MIC creep or source-control concerns." },
+  { section: "Clinical Principles", topic: "C. difficile and cystitis", text: "C. difficile non-severe: fidaxomicin (first) or oral vancomycin; metronidazole now second-line. Uncomplicated cystitis: nitrofurantoin, TMP-SMX, or fosfomycin (narrow spectrum, concentrate in urine)." },
+
+  // --- Non-β-lactam mechanism overview ---
+  { section: "Non-β-Lactam Overview", topic: "Vancomycin mechanism", text: "Vancomycin binds the D-Ala-D-Ala substrate (not the PBP enzyme) — different target from β-lactams, no cross-resistance. VRE/VRSA arise from a D-Ala-D-Lac mutation that abolishes vancomycin binding." },
+  { section: "Non-β-Lactam Overview", topic: "Fosfomycin mechanism", text: "Fosfomycin inhibits MurA, the first enzyme of peptidoglycan synthesis (cytoplasmic phase). Upstream of PBPs and not touched by β-lactamases." },
+  { section: "Non-β-Lactam Overview", topic: "Daptomycin and polymyxins", text: "Daptomycin forms Ca²⁺-dependent pores in Gram+ membranes — inactivated by pulmonary surfactant (do not use for pneumonia). Polymyxins (colistin) act as cationic detergents on Gram- LPS — nephrotoxic 'last resort.'" },
+  { section: "Non-β-Lactam Overview", topic: "Aminoglycosides and tetracyclines", text: "Aminoglycosides bind 30S ribosome causing codon misreading — bactericidal, concentration-dependent, once-daily high-dose. Tetracyclines block tRNA A-site binding — bacteriostatic, broad including atypicals." },
+  { section: "Non-β-Lactam Overview", topic: "50S inhibitors", text: "Macrolides, clindamycin, and streptogramins share the MLS binding site on 23S rRNA — cross-resistance via erm methylases. Linezolid binds a UNIQUE 50S site, no cross-resistance, works against MRSA and VRE." },
+  { section: "Non-β-Lactam Overview", topic: "Fluoroquinolones", text: "Poison the DNA gyrase / topoisomerase IV–DNA complex, trapping double-strand breaks. Bactericidal. Black-box warnings: tendon rupture, QT prolongation, C. difficile, aortic aneurysm." },
+  { section: "Non-β-Lactam Overview", topic: "Nitroimidazoles and nitrofurans", text: "Both are prodrugs. Anaerobic bacterial enzymes reduce the nitro group to reactive intermediates that damage DNA. Metronidazole: anaerobes plus protozoa. Nitrofurantoin: concentrates in urine for cystitis." },
+  { section: "Non-β-Lactam Overview", topic: "RNA polymerase inhibitors", text: "Rifamycins (rifampin) and macrocyclics (fidaxomicin) bind bacterial RNA polymerase β-subunit (not eukaryotic). Rifampin requires combination therapy because of rapid resistance. Fidaxomicin is narrow anti-C. diff with minimal absorption and spares Bacteroides → lower recurrence." },
+  { section: "Non-β-Lactam Overview", topic: "Folate inhibitors", text: "TMP-SMX is a sequential pathway blockade: sulfamethoxazole inhibits DHPS (mimics PABA), trimethoprim inhibits DHFR. Synergistic and bactericidal. Humans don't synthesize folate, so the pathway is bacteria-selective." },
+  { section: "Non-β-Lactam Overview", topic: "Bactericidal vs bacteriostatic", text: "Bactericidal: β-lactams, vancomycin, aminoglycosides, fluoroquinolones, daptomycin. Bacteriostatic: tetracyclines, macrolides, clindamycin, sulfonamides, linezolid (mostly). The distinction matters for immunocompromised patients and for endocarditis where bactericidal agents are preferred." },
+];
+
+export const GUIDE_CONTENT = [
+  ...WELDON.map((e) => ({ ...e, instructor: "weldon" })),
+  ...VIRGA.map((e) => ({ ...e, instructor: "virga" })),
 ];
