@@ -105,6 +105,8 @@ For interactive pages, add `"use client";` as the first line.
 | `/mnemonics` | `src/app/mnemonics/page.js` | `src/data/mnemonics.js` | Memory aids with items + tip |
 | `/confusables` | `src/app/confusables/page.js` | `src/data/confusables.js` | Side-by-side comparison cards |
 
+**Global search:** `src/components/SearchBar.js` is mounted in the sidebar on every page (Cmd+K shortcut). It searches a flat index built from all data files at `src/data/searchIndex.js`. The guide is indexed via a parallel text extract at `src/data/guideContent.js` — the guide JSX itself is not scraped, so **any new entry you add to `/guide` must be mirrored into `guideContent.js`** or it won't appear in search. Other data files (flashcards, mnemonics, confusables, highyield, tree) are imported directly, so they auto-index.
+
 Navigation is in `src/components/Sidebar.js`. **Any new route must be added to the `NAV` array AND the home grid's `tools` array.**
 
 ### Data shapes (canonical — follow exactly)
@@ -254,6 +256,7 @@ None of these apply to the current static app, but keep them in mind if the app 
 - [ ] Page root uses `animate-fade` and the standard `<h1>` header style
 - [ ] `git push` to `main` triggered Vercel auto-deploy
 - [ ] Live URL returns 200
+- [ ] New content is searchable via the Cmd+K bar (data files auto-index; for `/guide` edits, mirror into `src/data/guideContent.js`)
 
 ---
 

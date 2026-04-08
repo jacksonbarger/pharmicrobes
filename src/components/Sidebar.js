@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import SearchBar from "./SearchBar";
 
 const NAV = [
   { href: "/", label: "Home", icon: "🏠" },
@@ -49,6 +50,7 @@ export default function Sidebar() {
             <p className="text-white/50 text-xs mt-0.5">Med Micro Study Hub</p>
           </Link>
         </div>
+        <SearchBar onNavigate={() => setOpen(false)} />
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {NAV.map((item) => {
             const active = pathname === item.href;
